@@ -2,17 +2,25 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-17 20:43:19 krylon>
+// Time-stamp: <2023-04-18 14:56:24 krylon>
 
 package backend
 
 import (
+	"bufio"
+	"os"
 	"os/exec"
+	"regexp"
+	"strings"
 
 	"github.com/blicero/krylib"
 )
 
-// Detect the operating system name. Works by calling uname, so this does not
+const releaseFile = "/etc/os-release"
+
+var linePat = regexp.MustCompile(`^"(\w+)"="([^"]+)"`)
+
+// DetectOS detects the operating system name. Works by calling uname, so this does not
 // work on Windows.
 func DetectOS() (string, error) {
 	var (
@@ -30,3 +38,39 @@ func DetectOS() (string, error) {
 
 	return krylib.Chomp(name), nil
 } // func DetectOS() (string, error)
+
+// DetectOSVersion returns - if successful - the name and release of the
+// operating system we are running on.
+func DetectOSVersion() (string, string, error) {
+	var (
+		err                 error
+		line, name, version string
+		fh                  *os.File
+		rdr                 *bufio.Reader
+	)
+
+	if fh, err = os.Open(releaseFile); err != nil {
+		return "", "", err
+	}
+
+	defer fh.Close() // nolint: errcheck
+
+	rdr = bufio.NewReader(fh)
+
+	for line, err = rdr.ReadString('\n'); err != nil || line == ""; line, err = rdr.ReadString('\n') {
+		var match = linePat.FindStringSubmatch(line)
+
+		if len(match) != 3 {
+			continue
+		}
+
+		switch strings.ToLower(match[1]) {
+		case "name":
+			name = match[2]
+		case "version_id":
+			version = match[2]
+		}
+	}
+
+	return name, version, err
+} // func DetectOSVersion() (string, string, error)

@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-17 21:25:03 krylon>
+// Time-stamp: <2023-04-18 14:55:28 krylon>
 
 package backend
 
@@ -21,3 +21,23 @@ func TestDetectOS(t *testing.T) {
 		t.Logf("Operating System is %s", s)
 	}
 } // func TestDetectOS(t *testing.T)
+
+func TestDetectOSVersion(t *testing.T) {
+	var (
+		err           error
+		name, version string
+	)
+
+	if name, version, err = DetectOSVersion(); err != nil {
+		t.Errorf("Failed to detect OS Version: %s",
+			err.Error())
+	} else if name == "" || version == "" {
+		t.Errorf("Failed to detect OS version: %q %q",
+			name,
+			version)
+	} else {
+		t.Logf("OS Version is %s %s",
+			name,
+			version)
+	}
+} // func TestDetectOSVersion(t *testing.T)
