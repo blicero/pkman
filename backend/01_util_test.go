@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-18 14:55:28 krylon>
+// Time-stamp: <2023-04-19 19:11:04 krylon>
 
 package backend
 
@@ -10,15 +10,15 @@ import "testing"
 
 func TestDetectOS(t *testing.T) {
 	var (
-		err error
-		s   string
+		err           error
+		name, version string
 	)
 
-	if s, err = DetectOS(); err != nil {
+	if name, version, err = DetectOS(); err != nil {
 		t.Errorf("Failed to detect operating system: %s",
 			err.Error())
 	} else {
-		t.Logf("Operating System is %s", s)
+		t.Logf("Operating System is %s %s", name, version)
 	}
 } // func TestDetectOS(t *testing.T)
 

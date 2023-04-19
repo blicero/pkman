@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-19 17:31:49 krylon>
+// Time-stamp: <2023-04-19 19:09:52 krylon>
 
 package backend
 
@@ -24,21 +24,30 @@ var linePat = regexp.MustCompile(`^(\w+)="([^"]+)"`)
 
 // DetectOS detects the operating system name. Works by calling uname, so this does not
 // work on Windows.
-func DetectOS() (string, error) {
+func DetectOS() (string, string, error) {
 	var (
 		err    error
-		name   string
+		outstr string
+		pieces []string
 		output []byte
-		cmd    = exec.Command("/usr/bin/uname", "-s")
+		cmd    = exec.Command("/usr/bin/uname", "-rs")
 	)
 
 	if output, err = cmd.Output(); err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	name = string(output)
+	outstr = krylib.Chomp(string(output))
 
-	return krylib.Chomp(name), nil
+	pieces = krylib.SplitOnWhitespace(outstr)
+
+	if len(pieces) != 2 {
+		return "", "",
+			fmt.Errorf("Cannot parse output of uname(1): %q",
+				string(outstr))
+	}
+
+	return pieces[0], pieces[1], nil
 } // func DetectOS() (string, error)
 
 // DetectOSVersion returns - if successful - the name and release of the
