@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-19 19:09:52 krylon>
+// Time-stamp: <2023-04-19 19:53:04 krylon>
 
 package backend
 
@@ -47,12 +47,16 @@ func DetectOS() (string, string, error) {
 				string(outstr))
 	}
 
+	if pieces[0] == "Linux" {
+		return parseOSRelease()
+	}
+
 	return pieces[0], pieces[1], nil
 } // func DetectOS() (string, error)
 
-// DetectOSVersion returns - if successful - the name and release of the
-// operating system we are running on.
-func DetectOSVersion() (string, string, error) {
+// parseOSRelease attempts to extract the name and version of the system we are
+// running on from /etc/os-release.
+func parseOSRelease() (string, string, error) {
 	var (
 		err                 error
 		line, name, version string
