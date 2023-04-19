@@ -2,12 +2,14 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-18 14:56:24 krylon>
+// Time-stamp: <2023-04-19 17:31:49 krylon>
 
 package backend
 
 import (
 	"bufio"
+	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"regexp"
@@ -18,7 +20,7 @@ import (
 
 const releaseFile = "/etc/os-release"
 
-var linePat = regexp.MustCompile(`^"(\w+)"="([^"]+)"`)
+var linePat = regexp.MustCompile(`^(\w+)="([^"]+)"`)
 
 // DetectOS detects the operating system name. Works by calling uname, so this does not
 // work on Windows.
@@ -57,19 +59,34 @@ func DetectOSVersion() (string, string, error) {
 
 	rdr = bufio.NewReader(fh)
 
-	for line, err = rdr.ReadString('\n'); err != nil || line == ""; line, err = rdr.ReadString('\n') {
+	for line, err = rdr.ReadString('\n'); err == nil && line != ""; line, err = rdr.ReadString('\n') {
 		var match = linePat.FindStringSubmatch(line)
 
 		if len(match) != 3 {
+			// fmt.Fprintf(os.Stderr,
+			// 	"Could not parse line %q\n",
+			// 	line)
 			continue
 		}
 
-		switch strings.ToLower(match[1]) {
-		case "name":
+		var key = strings.ToLower(match[1])
+
+		fmt.Fprintf(os.Stderr,
+			"%s = %q\n",
+			key,
+			match[2])
+
+		if key == "name" {
 			name = match[2]
-		case "version_id":
+		} else if key == "version_id" && version == "" {
+			version = match[2]
+		} else if key == "version" {
 			version = match[2]
 		}
+	}
+
+	if err == io.EOF {
+		err = nil
 	}
 
 	return name, version, err
