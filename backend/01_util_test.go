@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-21 19:54:08 krylon>
+// Time-stamp: <2023-04-21 22:00:09 krylon>
 
 package backend
 
@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/blicero/pkman/backend/platform"
 )
 
 func TestParseOSRelease(t *testing.T) {
@@ -34,13 +36,25 @@ func TestParseOSRelease(t *testing.T) {
 	}
 
 	for _, filename := range files {
-		var fpath = filepath.Join("testdata", filename)
+		var (
+			fpath  = filepath.Join("testdata", filename)
+			osname string
+			system platform.System
+		)
 		if strings.HasPrefix(filename, "os-release.") {
 			fmt.Printf("Attempt to parse %s\n", filename)
-			if _, _, err = parseOSRelease(fpath); err != nil {
+			if osname, _, err = parseOSRelease(fpath); err != nil {
 				t.Errorf("Failed to parse %s: %s",
 					filename,
 					err.Error())
+			} else if system, err = platform.ParseSystem(osname); err != nil {
+				t.Errorf("Failed to parse OS name %q: %s",
+					osname,
+					err.Error())
+			} else {
+				fmt.Printf("Parsed OS %q to %s\n",
+					osname,
+					system)
 			}
 		}
 	}
