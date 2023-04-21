@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 17. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-19 19:53:04 krylon>
+// Time-stamp: <2023-04-21 19:44:03 krylon>
 
 package backend
 
@@ -48,7 +48,7 @@ func DetectOS() (string, string, error) {
 	}
 
 	if pieces[0] == "Linux" {
-		return parseOSRelease()
+		return parseOSRelease(releaseFile)
 	}
 
 	return pieces[0], pieces[1], nil
@@ -56,7 +56,7 @@ func DetectOS() (string, string, error) {
 
 // parseOSRelease attempts to extract the name and version of the system we are
 // running on from /etc/os-release.
-func parseOSRelease() (string, string, error) {
+func parseOSRelease(path string) (string, string, error) {
 	var (
 		err                 error
 		line, name, version string
@@ -64,7 +64,7 @@ func parseOSRelease() (string, string, error) {
 		rdr                 *bufio.Reader
 	)
 
-	if fh, err = os.Open(releaseFile); err != nil {
+	if fh, err = os.Open(path); err != nil {
 		return "", "", err
 	}
 
@@ -76,18 +76,15 @@ func parseOSRelease() (string, string, error) {
 		var match = linePat.FindStringSubmatch(line)
 
 		if len(match) != 3 {
-			// fmt.Fprintf(os.Stderr,
-			// 	"Could not parse line %q\n",
-			// 	line)
 			continue
 		}
 
 		var key = strings.ToLower(match[1])
 
-		fmt.Fprintf(os.Stderr,
-			"%s = %q\n",
-			key,
-			match[2])
+		// fmt.Fprintf(os.Stderr,
+		// 	"%s = %q\n",
+		// 	key,
+		// 	match[2])
 
 		if key == "name" {
 			name = match[2]
