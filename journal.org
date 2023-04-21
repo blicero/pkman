@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-19 23:03:27 krylon>
+# Time-stamp: <2023-04-21 19:58:35 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,15 +11,15 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-04-19 Mi 23:03]
+   #+CAPTION: Clock summary at [2023-04-21 Fr 19:58]
    | Headline                        | Time    |       |       |       |
    |---------------------------------+---------+-------+-------+-------|
-   | *Total time*                    | *12:34* |       |       |       |
+   | *Total time*                    | *14:15* |       |       |       |
    |---------------------------------+---------+-------+-------+-------|
-   | pkman                           | 12:34   |       |       |       |
-   | \_  Components [0/0]            |         | 12:34 |       |       |
-   | \_    Package managers [0/1]    |         |       | 12:34 |       |
-   | \_      Detect operating system |         |       |       | 12:34 |
+   | pkman                           | 14:15   |       |       |       |
+   | \_  Components [0/0]            |         | 14:15 |       |       |
+   | \_    Package managers [0/1]    |         |       | 14:15 |       |
+   | \_      Detect operating system |         |       |       | 14:15 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -60,6 +60,7 @@
     :END:
 **** TODO Detect operating system
      :LOGBOOK:
+     CLOCK: [2023-04-21 Fr 18:17]--[2023-04-21 Fr 19:58] =>  1:41
      CLOCK: [2023-04-19 Mi 15:56]--[2023-04-19 Mi 23:03] =>  7:07
      CLOCK: [2023-04-18 Di 20:32]--[2023-04-18 Di 23:59] =>  3:27
      CLOCK: [2023-04-18 Di 14:28]--[2023-04-18 Di 14:56] =>  0:28
