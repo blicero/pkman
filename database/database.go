@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 20:24:20 krylon>
+// Time-stamp: <2023-04-22 20:49:07 krylon>
 
 // Package database provides the persistence layer and the assorted operations
 // we need to perform.
@@ -20,6 +20,7 @@ import (
 
 	"github.com/blicero/krylib"
 	"github.com/blicero/pkman/common"
+	"github.com/blicero/pkman/database/event"
 	"github.com/blicero/pkman/database/query"
 )
 
@@ -29,10 +30,19 @@ var (
 )
 
 const (
-	retryDelay   = 10 * time.Millisecond
-	cacheTimeout = time.Second * 1200
+	retryDelay = 10 * time.Millisecond
 )
 
+func worthARetry(err error) bool {
+	return retryPat.MatchString(err.Error())
+} // func (db *Database) worth_a_retry(err error) bool
+
+func waitForRetry() {
+	time.Sleep(retryDelay)
+}
+
+// Database wraps the database connection and its associated state and exposes
+// the operations we can perform on it.
 type Database struct {
 	db        *sql.DB
 	stmtTable map[query.ID]*sql.Stmt
@@ -87,11 +97,7 @@ func OpenDB(path string) (*Database, error) {
 	return db, nil
 } // func OpenDB(path string) (*Database, error)
 
-func (db *Database) worthARetry(err error) bool {
-	return retryPat.MatchString(err.Error())
-} // func (db *Database) worth_a_retry(err error) bool
-
-func (db *Database) getStatement(qid query.ID) (*sql.Stmt, error) {
+func (db *Database) getQuery(qid query.ID) (*sql.Stmt, error) {
 	if stmt, ok := db.stmtTable[qid]; ok {
 		return stmt, nil
 	}
@@ -102,7 +108,7 @@ func (db *Database) getStatement(qid query.ID) (*sql.Stmt, error) {
 
 PREPARE_QUERY:
 	if stmt, err = db.db.Prepare(qDb[qid]); err != nil {
-		if db.worthARetry(err) {
+		if worthARetry(err) {
 			time.Sleep(retryDelay)
 			goto PREPARE_QUERY
 		} else {
@@ -115,7 +121,7 @@ PREPARE_QUERY:
 		db.stmtTable[qid] = stmt
 		return stmt, nil
 	}
-} // func (db *Database) getStatement(stmt_id query.QueryID) (*sql.Stmt, error)
+} // func (db *Database) getQuery(stmt_id query.QueryID) (*sql.Stmt, error)
 
 // Begin starts a transaction
 func (db *Database) Begin() error {
@@ -131,7 +137,7 @@ func (db *Database) Begin() error {
 
 BEGIN:
 	if tx, err = db.db.Begin(); err != nil {
-		if db.worthARetry(err) {
+		if worthARetry(err) {
 			time.Sleep(retryDelay)
 			goto BEGIN
 		} else {
@@ -228,3 +234,80 @@ func (db *Database) Close() {
 
 	db.db.Close()
 } // func (db *Database) Close()
+
+// EventAdd inserts an Event into the database.
+func (db *Database) EventAdd(ev *event.Event) error {
+	const qid query.ID = query.EventAdd
+	var (
+		err    error
+		msg    string
+		stmt   *sql.Stmt
+		tx     *sql.Tx
+		status bool
+	)
+
+	if stmt, err = db.getQuery(qid); err != nil {
+		db.log.Printf("[ERROR] Cannot prepare query %s: %s\n",
+			qid.String(),
+			err.Error())
+		return err
+	} else if db.tx != nil {
+		tx = db.tx
+	} else {
+	BEGIN_AD_HOC:
+		if tx, err = db.db.Begin(); err != nil {
+			if worthARetry(err) {
+				waitForRetry()
+				goto BEGIN_AD_HOC
+			} else {
+				msg = fmt.Sprintf("Error starting transaction: %s\n",
+					err.Error())
+				db.log.Printf("[ERROR] %s\n", msg)
+				return errors.New(msg)
+			}
+		} else {
+			defer func() {
+				var err2 error
+				if status {
+					if err2 = tx.Commit(); err2 != nil {
+						db.log.Printf("[ERROR] Failed to commit ad-hoc transaction: %s\n",
+							err2.Error())
+					}
+				} else if err2 = tx.Rollback(); err2 != nil {
+					db.log.Printf("[ERROR] Rollback of ad-hoc transaction failed: %s\n",
+						err2.Error())
+				}
+			}()
+		}
+	}
+
+	stmt = tx.Stmt(stmt)
+	var res sql.Result
+
+EXEC_QUERY:
+	if res, err = stmt.Exec(ev.Type, ev.Timestamp, ev.Status); err != nil {
+		if worthARetry(err) {
+			waitForRetry()
+			goto EXEC_QUERY
+		} else {
+			err = fmt.Errorf("Cannot add Event %s to database: %s",
+				ev.Type,
+				err.Error())
+			db.log.Printf("[ERROR] %s\n", err.Error())
+			return err
+		}
+	} else {
+		var id int64
+
+		if id, err = res.LastInsertId(); err != nil {
+			db.log.Printf("[ERROR] Cannot get ID of new Event %s: %s\n",
+				ev.Type,
+				err.Error())
+			return err
+		}
+
+		status = true
+		ev.ID = id
+		return nil
+	}
+} // func (db *Database) EventAdd(ev *event.Event) error
