@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-21 19:58:35 krylon>
+# Time-stamp: <2023-04-22 20:52:08 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,15 +11,17 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-04-21 Fr 19:58]
+   #+CAPTION: Clock summary at [2023-04-22 Sa 20:52]
    | Headline                        | Time    |       |       |       |
    |---------------------------------+---------+-------+-------+-------|
-   | *Total time*                    | *14:15* |       |       |       |
+   | *Total time*                    | *20:03* |       |       |       |
    |---------------------------------+---------+-------+-------+-------|
-   | pkman                           | 14:15   |       |       |       |
-   | \_  Components [0/0]            |         | 14:15 |       |       |
-   | \_    Package managers [0/1]    |         |       | 14:15 |       |
-   | \_      Detect operating system |         |       |       | 14:15 |
+   | pkman                           | 20:03   |       |       |       |
+   | \_  Components [0/0]            |         | 20:03 |       |       |
+   | \_    Database [0/0]            |         |       |  3:42 |       |
+   | \_    Package managers [2/2]    |         |       | 16:21 |       |
+   | \_      Detect operating system |         |       |       | 14:38 |
+   | \_      Interface               |         |       |       |  1:43 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -32,10 +34,31 @@
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
     :END:
+    :LOGBOOK:
+    CLOCK: [2023-04-22 Sa 17:55]--[2023-04-22 Sa 20:52] =>  2:57
+    CLOCK: [2023-04-22 Sa 16:28]--[2023-04-22 Sa 17:13] =>  0:45
+    :END:
     I want to keep track of some things, most importantly /when/ updates are
     installed. Also, when packages are installed, deleted, etc. Eventually,
     I'd like to provide a nice interface to do something with that data.
     I'll probably end up using SQLite again. But that is not final.
+**** What data to store
+     [2023-04-21 Fr 23:45]
+     I am starting to think about what data I want to store. I definitely want
+     to keep track of when the packages database has been updated and when
+     updates were installed.
+     |-------------------+---------+---------|
+     | Data              | Type    | Remarks |
+     |-------------------+---------+---------|
+     | Time of refresh   | Integer |         |
+     | Time of update    | Integer |         |
+     | Status of refresh | Integer |         |
+     | Status of update  | Integer |         |
+     |-------------------+---------+---------|
+     In fact, now that I think of it, maybe I want to store every destructive
+     operation, with timestamp and result, possibly the exact command line
+     that was executed.
+     
 *** CLI [0/0]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
@@ -53,13 +76,15 @@
     - [ ] Install updates
     - [ ] List installed packages
     - [ ] Clean up
-*** Package managers [0/1]
+*** Package managers [2/2]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
     :END:
-**** TODO Detect operating system
+**** DONE Detect operating system
+     CLOSED: [2023-04-21 Fr 22:03]
      :LOGBOOK:
+     CLOCK: [2023-04-21 Fr 21:40]--[2023-04-21 Fr 22:03] =>  0:23
      CLOCK: [2023-04-21 Fr 18:17]--[2023-04-21 Fr 19:58] =>  1:41
      CLOCK: [2023-04-19 Mi 15:56]--[2023-04-19 Mi 23:03] =>  7:07
      CLOCK: [2023-04-18 Di 20:32]--[2023-04-18 Di 23:59] =>  3:27
@@ -67,6 +92,14 @@
      CLOCK: [2023-04-17 Mo 21:10]--[2023-04-17 Mo 22:28] =>  1:18
      CLOCK: [2023-04-17 Mo 10:36]--[2023-04-17 Mo 10:50] =>  0:14
      :END:
+**** DONE Interface
+     CLOSED: [2023-04-21 Fr 23:51]
+     :LOGBOOK:
+     CLOCK: [2023-04-21 Fr 22:08]--[2023-04-21 Fr 23:51] =>  1:43
+     :END:
+     My idea is simple enough - define a Go interface that offers all of the
+     operations I want to perform, then write implementations of that for each
+     package manager I want to support. 
 **** APT
 **** dnf
 **** zypper
