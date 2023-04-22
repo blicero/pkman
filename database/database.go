@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 20:49:07 krylon>
+// Time-stamp: <2023-04-22 22:56:47 krylon>
 
 // Package database provides the persistence layer and the assorted operations
 // we need to perform.
@@ -311,3 +311,153 @@ EXEC_QUERY:
 		return nil
 	}
 } // func (db *Database) EventAdd(ev *event.Event) error
+
+// EventGetRecent fetches the (up to) <n> most recent events from the database.
+// If n == -1, all Events are fetched.
+func (db *Database) EventGetRecent(n int) ([]event.Event, error) {
+	const qid query.ID = query.EventGetRecent
+	var (
+		err  error
+		stmt *sql.Stmt
+	)
+
+	if stmt, err = db.getQuery(qid); err != nil {
+		db.log.Printf("[ERROR] Cannot prepare query %s: %s\n",
+			qid,
+			err.Error())
+		return nil, err
+	} else if db.tx != nil {
+		stmt = db.tx.Stmt(stmt)
+	}
+
+	var rows *sql.Rows
+
+EXEC_QUERY:
+	if rows, err = stmt.Query(n); err != nil {
+		if worthARetry(err) {
+			waitForRetry()
+			goto EXEC_QUERY
+		}
+
+		return nil, err
+	}
+
+	defer rows.Close() // nolint: errcheck,gosec
+	var results = make([]event.Event, 0, n)
+
+	for rows.Next() {
+		var (
+			ev    event.Event
+			stamp int64
+		)
+
+		if err = rows.Scan(&ev.ID, &ev.Type, &stamp, &ev.Status); err != nil {
+			db.log.Printf("[ERROR] Cannot scan row: %s\n", err.Error())
+			return nil, err
+		}
+
+		ev.Timestamp = time.Unix(stamp, 0)
+		results = append(results, ev)
+	}
+
+	return results, nil
+} // func (db *Database) EventGetRecent(n int) ([]event.Event, error)
+
+// EventGetRecentByType fetches the <n> most recent Events of the given type.
+func (db *Database) EventGetRecentByType(n int, evType event.ID) ([]event.Event, error) {
+	const qid query.ID = query.EventGetRecentByType
+	var (
+		err  error
+		stmt *sql.Stmt
+	)
+
+	if stmt, err = db.getQuery(qid); err != nil {
+		db.log.Printf("[ERROR] Cannot prepare query %s: %s\n",
+			qid,
+			err.Error())
+		return nil, err
+	} else if db.tx != nil {
+		stmt = db.tx.Stmt(stmt)
+	}
+
+	var rows *sql.Rows
+
+EXEC_QUERY:
+	if rows, err = stmt.Query(n, evType); err != nil {
+		if worthARetry(err) {
+			waitForRetry()
+			goto EXEC_QUERY
+		}
+
+		return nil, err
+	}
+
+	defer rows.Close() // nolint: errcheck,gosec
+	var results = make([]event.Event, 0, n)
+
+	for rows.Next() {
+		var (
+			ev    = event.Event{Type: evType}
+			stamp int64
+		)
+
+		if err = rows.Scan(&ev.ID, &stamp, &ev.Status); err != nil {
+			db.log.Printf("[ERROR] Cannot scan row: %s\n", err.Error())
+			return nil, err
+		}
+
+		ev.Timestamp = time.Unix(stamp, 0)
+		results = append(results, ev)
+	}
+
+	return results, nil
+} // func (db *Database) EventGetRecentByType(n int, evType event.ID) ([]event.Event, error)
+
+func (db *Database) EventGetRecentErr(n int) ([]event.Event, error) {
+	const qid query.ID = query.EventGetRecentErr
+	var (
+		err  error
+		stmt *sql.Stmt
+	)
+
+	if stmt, err = db.getQuery(qid); err != nil {
+		db.log.Printf("[ERROR] Cannot prepare query %s: %s\n",
+			qid,
+			err.Error())
+		return nil, err
+	} else if db.tx != nil {
+		stmt = db.tx.Stmt(stmt)
+	}
+
+	var rows *sql.Rows
+
+EXEC_QUERY:
+	if rows, err = stmt.Query(n); err != nil {
+		if worthARetry(err) {
+			waitForRetry()
+			goto EXEC_QUERY
+		}
+
+		return nil, err
+	}
+
+	defer rows.Close() // nolint: errcheck,gosec
+	var results = make([]event.Event, 0, n)
+
+	for rows.Next() {
+		var (
+			ev    event.Event
+			stamp int64
+		)
+
+		if err = rows.Scan(&ev.ID, &ev.Type, &stamp, &ev.Status); err != nil {
+			db.log.Printf("[ERROR] Cannot scan row: %s\n", err.Error())
+			return nil, err
+		}
+
+		ev.Timestamp = time.Unix(stamp, 0)
+		results = append(results, ev)
+	}
+
+	return results, nil
+} // func (db *Database) EventGetRecentErr(n int) ([]event.Event, error)

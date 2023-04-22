@@ -2,7 +2,7 @@
 // -*- coding: utf-8; mode: go; -*-
 // Created on 23. 12. 2015 by Benjamin Walkenhorst
 // (c) 2015 Benjamin Walkenhorst
-// Time-stamp: <2023-04-15 17:04:21 krylon>
+// Time-stamp: <2023-04-22 23:56:43 krylon>
 
 // Package common provides constants, variables and functions used
 // throughout the application.
@@ -77,26 +77,25 @@ func init() {
 // XfrDbgPath is the path of the folder where data on DNS zone transfers
 // are stored.
 var (
-	BaseDir       = filepath.Join(os.Getenv("HOME"), "guang.d")
-	LogPath       = filepath.Join(BaseDir, "guang.log")
-	DbPath        = filepath.Join(BaseDir, "guang.db")
-	HostCachePath = filepath.Join(BaseDir, "ip_cache")
-	XfrDbgPath    = filepath.Join(BaseDir, "xfr")
+	BaseDir = filepath.Join(os.Getenv("HOME"), "pkman.d")
+	LogPath = filepath.Join(BaseDir, "pkman.log")
+	DbPath  = filepath.Join(BaseDir, "pkman.db")
 )
 
 // SetBaseDir sets the BaseDir and related variables.
-func SetBaseDir(path string) {
+func SetBaseDir(path string) error {
 	fmt.Printf("Setting BASE_DIR to %s\n", path)
 
 	BaseDir = path
 	LogPath = filepath.Join(BaseDir, "guang.log")
 	DbPath = filepath.Join(BaseDir, "guang.db")
-	HostCachePath = filepath.Join(BaseDir, "ip_cache.kch")
-	XfrDbgPath = filepath.Join(BaseDir, "xfr")
 
 	if err := InitApp(); err != nil {
 		fmt.Printf("Error initializing application environment: %s\n", err.Error())
+		return err
 	}
+
+	return nil
 } // func SetBaseDir(path string)
 
 // GetLogger Tries to create a named logger instance and return it.
@@ -133,12 +132,6 @@ func InitApp() error {
 	if err != nil {
 		if !os.IsExist(err) {
 			msg := fmt.Sprintf("Error creating BASE_DIR %s: %s", BaseDir, err.Error())
-			return errors.New(msg)
-		}
-	} else if err = os.Mkdir(XfrDbgPath, 0755); err != nil {
-		if !os.IsExist(err) {
-			msg := fmt.Sprintf("Error creating XFR_DBG_PATH %s: %s",
-				XfrDbgPath, err.Error())
 			return errors.New(msg)
 		}
 	}
