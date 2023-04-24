@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 24. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-24 19:55:09 krylon>
+// Time-stamp: <2023-04-24 20:25:04 krylon>
 
 package database
 
@@ -34,14 +34,16 @@ func randomEvent(ev *event.Event) {
 } // func randomEvent(ev *event.Event)
 
 func TestEventAdd(t *testing.T) {
-	var err error
-
 	if db == nil {
 		t.SkipNow()
 	}
 
 	for i := range initEvents {
-		var ev = &initEvents[i]
+		var (
+			err error
+			ev  = &initEvents[i]
+		)
+
 		randomEvent(ev)
 
 		if err = db.EventAdd(ev); err != nil {
@@ -53,3 +55,27 @@ func TestEventAdd(t *testing.T) {
 		}
 	}
 } // func TestEventAdd(t *testing.T)
+
+func TestEventGetRecent(t *testing.T) {
+	if db == nil {
+		t.SkipNow()
+	}
+
+	for i := 0; i < 20; i++ {
+		var (
+			err    error
+			evList []event.Event
+			cnt    = rand.Intn(evCnt) + 1
+		)
+
+		if evList, err = db.EventGetRecent(cnt); err != nil {
+			t.Errorf("Error fetching %d recent events: %s",
+				cnt,
+				err.Error())
+		} else if len(evList) != cnt {
+			t.Errorf("Unexpected number of results for EventGetRecent: %d (expected %d)",
+				len(evList),
+				cnt)
+		}
+	}
+} // func TestEventGetRecent(t *testing.T)

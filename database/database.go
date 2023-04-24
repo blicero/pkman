@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-24 10:46:10 krylon>
+// Time-stamp: <2023-04-24 20:25:43 krylon>
 
 // Package database provides the persistence layer and the assorted operations
 // we need to perform.
@@ -287,7 +287,7 @@ func (db *Database) EventAdd(ev *event.Event) error {
 	var res sql.Result
 
 EXEC_QUERY:
-	if res, err = stmt.Exec(ev.Type, ev.Timestamp, ev.Status); err != nil {
+	if res, err = stmt.Exec(ev.Type, ev.Timestamp.Unix(), ev.Status); err != nil {
 		if worthARetry(err) {
 			waitForRetry()
 			goto EXEC_QUERY
