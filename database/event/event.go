@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 20:48:03 krylon>
+// Time-stamp: <2023-04-24 19:31:37 krylon>
 
 //go:generate stringer -type=ID
 
@@ -24,6 +24,21 @@ const (
 	Clean
 	Autoremove
 )
+
+// EventCnt is the number of defined values for ID.
+const EventCnt = 6
+
+// AllEvents returns a slice of all defined values of ID.
+func AllEvents() []ID {
+	return []ID{
+		Add,
+		Delete,
+		Refresh,
+		Update,
+		Clean,
+		Autoremove,
+	}
+} // func AllEvents() []Event
 
 // Event represents one operation on the package manager.
 type Event struct {
