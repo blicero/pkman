@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 22:56:47 krylon>
+// Time-stamp: <2023-04-24 10:46:10 krylon>
 
 // Package database provides the persistence layer and the assorted operations
 // we need to perform.
@@ -22,6 +22,8 @@ import (
 	"github.com/blicero/pkman/common"
 	"github.com/blicero/pkman/database/event"
 	"github.com/blicero/pkman/database/query"
+
+	_ "github.com/mattn/go-sqlite3" // Import the database driver
 )
 
 var (
