@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 01. 02. 2021 by Benjamin Walkenhorst
 // (c) 2021 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 23:56:17 krylon>
+// Time-stamp: <2023-04-24 10:28:14 krylon>
 
 package database
 
@@ -19,7 +19,7 @@ func TestMain(m *testing.M) {
 	var (
 		err     error
 		result  int
-		baseDir = time.Now().Format("/tmp/ticker_db_test_20060102_150405")
+		baseDir = time.Now().Format("/tmp/pkman_db_test_20060102_150405")
 	)
 
 	if err = common.SetBaseDir(baseDir); err != nil {
