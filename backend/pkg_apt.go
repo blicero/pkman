@@ -2,12 +2,15 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-26 11:05:07 krylon>
+// Time-stamp: <2023-04-26 20:27:43 krylon>
 
 package backend
 
 import (
+	"bytes"
+	"io"
 	"log"
+	"os/exec"
 
 	"github.com/blicero/krylib"
 	"github.com/blicero/pkman/common"
@@ -45,6 +48,42 @@ func CreatePkgApt() (*PkgApt, error) {
 	return pk, nil
 } // func CreatePkgApt() (*PkgApt, error)
 
-func (pk *PkgApt) Search(string) ([]Package, error) {
+func (pk *PkgApt) Search(query string) ([]Package, error) {
+	var (
+		err              error
+		cmd              *exec.Cmd
+		pipeOut, pipeErr io.ReadCloser
+		bufOut, bufErr   bytes.Buffer
+	)
+
+	cmd = exec.Command(cmdApt, "search", query)
+
+	if pipeOut, err = cmd.StdoutPipe(); err != nil {
+		pk.log.Printf("[ERROR] Cannot get stdout pipe from Cmd: %s\n",
+			err.Error())
+		return nil, err
+	} else if pipeErr, err = cmd.StderrPipe(); err != nil {
+		pk.log.Printf("[ERROR] Cannot get stderr pipe from Cmd: %s\n",
+			err.Error())
+		return nil, err
+	}
+
+	if err = cmd.Start(); err != nil {
+		pk.log.Printf("[ERROR] Error starting command: %s\n",
+			err.Error())
+		return nil, err
+	}
+
+	io.Copy(&bufOut, pipeOut) // nolint: errcheck
+	io.Copy(&bufErr, pipeErr) // nolint: errcheck
+
+	if err = cmd.Wait(); err != nil {
+		if _, ok := err.(*exec.ExitError); !ok {
+			pk.log.Printf("[ERROR] Failed to wait for command: %s\n",
+				err.Error())
+			return nil, err
+		}
+	}
+
 	return nil, krylib.ErrNotImplemented
 } // func (pk *PkgApt) Search(string) ([]Package, error)
