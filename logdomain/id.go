@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 29. 10. 2022 by Benjamin Walkenhorst
 // (c) 2022 Benjamin Walkenhorst
-// Time-stamp: <2023-04-15 16:59:57 krylon>
+// Time-stamp: <2023-04-26 10:47:30 krylon>
 
 // Package logdomain provides symbolic constants to identify the various
 // pieces of the application that need to do logging.
@@ -16,6 +16,8 @@ type ID uint8
 // These constants represent the pieces of the application that need to log stuff.
 const (
 	Common ID = iota
+	Database
+	PkgManager
 )
 
 // AllDomains returns a slice of all the valid values for ID.

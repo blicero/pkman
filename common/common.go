@@ -2,7 +2,7 @@
 // -*- coding: utf-8; mode: go; -*-
 // Created on 23. 12. 2015 by Benjamin Walkenhorst
 // (c) 2015 Benjamin Walkenhorst
-// Time-stamp: <2023-04-22 23:56:43 krylon>
+// Time-stamp: <2023-04-26 10:49:13 krylon>
 
 // Package common provides constants, variables and functions used
 // throughout the application.
@@ -100,7 +100,7 @@ func SetBaseDir(path string) error {
 
 // GetLogger Tries to create a named logger instance and return it.
 // If the directory to hold the log file does not exist, try to create it.
-func GetLogger(name string) (*log.Logger, error) {
+func GetLogger(dom logdomain.ID) (*log.Logger, error) {
 	var err error
 	err = InitApp()
 	if err != nil {
@@ -109,7 +109,7 @@ func GetLogger(name string) (*log.Logger, error) {
 
 	logName := fmt.Sprintf("%s.%s",
 		AppName,
-		name)
+		dom)
 
 	var logfile *os.File
 	logfile, err = os.OpenFile(LogPath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0644)
