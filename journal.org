@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-24 22:25:17 krylon>
+# Time-stamp: <2023-04-26 22:01:44 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,17 +11,18 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-04-24 Mo 22:25]
+   #+CAPTION: Clock summary at [2023-04-26 Mi 22:01]
    | Headline                        | Time      |         |       |       |
    |---------------------------------+-----------+---------+-------+-------|
-   | *Total time*                    | *1d 3:19* |         |       |       |
+   | *Total time*                    | *1d 8:39* |         |       |       |
    |---------------------------------+-----------+---------+-------+-------|
-   | pkman                           | 1d 3:19   |         |       |       |
-   | \_  Components [0/0]            |           | 1d 3:19 |       |       |
+   | pkman                           | 1d 8:39   |         |       |       |
+   | \_  Components [0/0]            |           | 1d 8:39 |       |       |
    | \_    Database [0/0]            |           |         | 10:58 |       |
-   | \_    Package managers [2/2]    |           |         | 16:21 |       |
+   | \_    Package managers [2/2]    |           |         | 21:41 |       |
    | \_      Detect operating system |           |         |       | 14:38 |
    | \_      Interface               |           |         |       |  1:43 |
+   | \_      APT                     |           |         |       |  5:20 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -104,6 +105,9 @@
      operations I want to perform, then write implementations of that for each
      package manager I want to support. 
 **** APT
+     :LOGBOOK:
+     CLOCK: [2023-04-26 Mi 16:41]--[2023-04-26 Mi 22:01] =>  5:20
+     :END:
 **** dnf
 **** zypper
 **** pacman
