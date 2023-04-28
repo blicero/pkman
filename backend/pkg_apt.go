@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-26 20:27:43 krylon>
+// Time-stamp: <2023-04-27 10:54:12 krylon>
 
 package backend
 
@@ -11,6 +11,7 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"regexp"
 
 	"github.com/blicero/krylib"
 	"github.com/blicero/pkman/common"
@@ -48,7 +49,10 @@ func CreatePkgApt() (*PkgApt, error) {
 	return pk, nil
 } // func CreatePkgApt() (*PkgApt, error)
 
+var patSearch = regexp.MustCompile(`^(\S+) - (.*)`)
+
 func (pk *PkgApt) Search(query string) ([]Package, error) {
+	const cmdSearch = "/usr/bin/apt-cache"
 	var (
 		err              error
 		cmd              *exec.Cmd
@@ -56,7 +60,7 @@ func (pk *PkgApt) Search(query string) ([]Package, error) {
 		bufOut, bufErr   bytes.Buffer
 	)
 
-	cmd = exec.Command(cmdApt, "search", query)
+	cmd = exec.Command(cmdSearch, "search", query)
 
 	if pipeOut, err = cmd.StdoutPipe(); err != nil {
 		pk.log.Printf("[ERROR] Cannot get stdout pipe from Cmd: %s\n",
@@ -79,6 +83,7 @@ func (pk *PkgApt) Search(query string) ([]Package, error) {
 
 	if err = cmd.Wait(); err != nil {
 		if _, ok := err.(*exec.ExitError); !ok {
+			// FIXME Do something with stderr output!
 			pk.log.Printf("[ERROR] Failed to wait for command: %s\n",
 				err.Error())
 			return nil, err
