@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-26 22:01:44 krylon>
+# Time-stamp: <2023-04-28 11:46:34 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,18 +11,19 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-04-26 Mi 22:01]
+   #+CAPTION: Clock summary at [2023-04-28 Fr 11:46]
    | Headline                        | Time      |         |       |       |
    |---------------------------------+-----------+---------+-------+-------|
-   | *Total time*                    | *1d 8:39* |         |       |       |
+   | *Total time*                    | *1d 8:48* |         |       |       |
    |---------------------------------+-----------+---------+-------+-------|
-   | pkman                           | 1d 8:39   |         |       |       |
-   | \_  Components [0/0]            |           | 1d 8:39 |       |       |
+   | pkman                           | 1d 8:48   |         |       |       |
+   | \_  Components [0/0]            |           | 1d 8:48 |       |       |
    | \_    Database [0/0]            |           |         | 10:58 |       |
-   | \_    Package managers [2/2]    |           |         | 21:41 |       |
+   | \_    Package managers [2/2]    |           |         | 21:50 |       |
    | \_      Detect operating system |           |         |       | 14:38 |
    | \_      Interface               |           |         |       |  1:43 |
-   | \_      APT                     |           |         |       |  5:20 |
+   | \_      APT                     |           |         |       |  3:54 |
+   | \_      zypper                  |           |         |       |  1:35 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -106,10 +107,13 @@
      package manager I want to support. 
 **** APT
      :LOGBOOK:
-     CLOCK: [2023-04-26 Mi 16:41]--[2023-04-26 Mi 22:01] =>  5:20
+     CLOCK: [2023-04-26 Mi 16:41]--[2023-04-26 Mi 20:35] =>  3:54
      :END:
 **** dnf
 **** zypper
+     :LOGBOOK:
+     CLOCK: [2023-04-28 Fr 10:11]--[2023-04-28 Fr 11:46] =>  1:35
+     :END:
 **** pacman
 **** pkg FreeBSD
 **** pkg_* OpenBSD
