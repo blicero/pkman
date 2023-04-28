@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-26 22:01:44 krylon>
+# Time-stamp: <2023-04-27 19:37:50 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -104,7 +104,7 @@
      My idea is simple enough - define a Go interface that offers all of the
      operations I want to perform, then write implementations of that for each
      package manager I want to support. 
-**** APT
+**** apt
      :LOGBOOK:
      CLOCK: [2023-04-26 Mi 16:41]--[2023-04-26 Mi 22:01] =>  5:20
      :END:
