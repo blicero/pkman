@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 22. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-24 20:25:43 krylon>
+// Time-stamp: <2023-04-29 14:27:15 krylon>
 
 // Package database provides the persistence layer and the assorted operations
 // we need to perform.
@@ -22,6 +22,7 @@ import (
 	"github.com/blicero/pkman/common"
 	"github.com/blicero/pkman/database/event"
 	"github.com/blicero/pkman/database/query"
+	"github.com/blicero/pkman/logdomain"
 
 	_ "github.com/mattn/go-sqlite3" // Import the database driver
 )
@@ -64,7 +65,7 @@ func OpenDB(path string) (*Database, error) {
 		stmtTable: make(map[query.ID]*sql.Stmt),
 	}
 
-	if db.log, err = common.GetLogger("Database"); err != nil {
+	if db.log, err = common.GetLogger(logdomain.Database); err != nil {
 		msg = fmt.Sprintf("Error creating logger for Database: %s", err.Error())
 		fmt.Println(msg)
 		return nil, errors.New(msg)
