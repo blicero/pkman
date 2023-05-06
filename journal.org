@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-04-29 14:30:58 krylon>
+# Time-stamp: <2023-05-07 00:41:10 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,19 +11,20 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-04-29 Sa 14:30]
-   | Headline                        | Time      |         |       |       |
-   |---------------------------------+-----------+---------+-------+-------|
-   | *Total time*                    | *1d 9:13* |         |       |       |
-   |---------------------------------+-----------+---------+-------+-------|
-   | pkman                           | 1d 9:13   |         |       |       |
-   | \_  Components [0/0]            |           | 1d 9:13 |       |       |
-   | \_    Database [0/0]            |           |         | 11:05 |       |
-   | \_    Package managers [2/2]    |           |         | 22:08 |       |
-   | \_      Detect operating system |           |         |       | 14:38 |
-   | \_      Interface               |           |         |       |  1:43 |
-   | \_      apt                     |           |         |       |  3:54 |
-   | \_      zypper                  |           |         |       |  1:53 |
+   #+CAPTION: Clock summary at [2023-05-07 So 00:41]
+   | Headline                        | Time       |          |       |       |
+   |---------------------------------+------------+----------+-------+-------|
+   | *Total time*                    | *1d 15:37* |          |       |       |
+   |---------------------------------+------------+----------+-------+-------|
+   | pkman                           | 1d 15:37   |          |       |       |
+   | \_  Components [0/0]            |            | 1d 15:37 |       |       |
+   | \_    Database [0/0]            |            |          | 11:05 |       |
+   | \_    CLI [0/0]                 |            |          |  6:24 |       |
+   | \_    Package managers [2/2]    |            |          | 22:08 |       |
+   | \_      Detect operating system |            |          |       | 14:38 |
+   | \_      Interface               |            |          |       |  1:43 |
+   | \_      apt                     |            |          |       |  3:54 |
+   | \_      zypper                  |            |          |       |  1:53 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -70,8 +71,17 @@
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
     :END:
+    :LOGBOOK:
+    CLOCK: [2023-05-05 Fr 18:44]--[2023-05-05 Fr 19:08] =>  0:24
+    CLOCK: [2023-05-04 Do 16:56]--[2023-05-04 Do 22:56] =>  6:00
+    :END:
     Among the various package managers I am familiar with, I most like the
     interfaces offered by zypper on openSuse and pkg on FreeBSD.
+
+    [2023-05-04 Do 16:54]
+    After realizing that automated testing is not a very good fit for this
+    application, I think I need to build the CLI first and do interactive
+    testing, at least until I can figure out how to test automatically.
 *** Operations [0/6]
     It would probably best to define which operations I want to expose.
     I will probably want to add more as I go along.
