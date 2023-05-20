@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 28. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-20 12:40:51 krylon>
+// Time-stamp: <2023-05-20 21:48:58 krylon>
 
 package backend
 
@@ -11,6 +11,7 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"time"
 
 	"github.com/blicero/krylib"
 	"github.com/blicero/pkman/common"
@@ -18,7 +19,7 @@ import (
 	"github.com/blicero/pkman/logdomain"
 )
 
-const cmdZypper = "/usr/bin/zypper" // nolint: unused
+const cmdZypper = "/usr/bin/zypper"
 
 // PkgZypp implements the PkgManager interface for openSuse's zypper.
 type PkgZypp struct {
@@ -53,7 +54,7 @@ func (pk *PkgZypp) Search(query string) ([]Package, error) {
 		bufOut, bufErr bytes.Buffer
 	)
 
-	cmd = exec.Command(cmdApt, "se", query)
+	cmd = exec.Command(cmdZypper, "se", query)
 
 	if stdout, err = cmd.StdoutPipe(); err != nil {
 		pk.log.Printf("[ERROR] Cannot get stdout pipe from Cmd: %s\n",
@@ -84,3 +85,31 @@ func (pk *PkgZypp) Search(query string) ([]Package, error) {
 
 	return nil, krylib.ErrNotImplemented
 } // func (pk *PkgZypp) Search(query string) ([]Package, error)
+
+func (pk *PkgZypp) Install(args ...string) error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgZypp) Install(args ...string) error
+
+func (pk *PkgZypp) Remove(args ...string) error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgZypp) Remove(args ...string) error
+
+func (pk *PkgZypp) Update() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgZypp) Update() error
+
+func (pk *PkgZypp) Upgrade() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgZypp) Upgrade() error
+
+func (pk *PkgZypp) ListInstalled() ([]Package, error) {
+	return nil, krylib.ErrNotImplemented
+} // func (pkg *PkgZypp) ListInstalled() ([]Package, error)
+
+func (pk *PkgZypp) Clean() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgZypp) Clean() error
+
+func (pkg *PkgZypp) LastUpdate() (time.Time, error) {
+	return time.Unix(0, 0), krylib.ErrNotImplemented
+} // func (pkg *PkgZypp) LastUpdate() (time.Time, error)

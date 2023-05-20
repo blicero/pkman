@@ -2,11 +2,16 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-21 23:38:59 krylon>
+// Time-stamp: <2023-05-20 21:50:41 krylon>
 
 package backend
 
-import "time"
+import (
+	"fmt"
+	"time"
+
+	"github.com/blicero/pkman/backend/platform"
+)
 
 // PkgManager is a generalized interface to package managers.
 type PkgManager interface {
@@ -19,3 +24,25 @@ type PkgManager interface {
 	Clean() error
 	LastUpdate() (time.Time, error)
 }
+
+// GetPkgManager returns the PkgManager implementation for the given OS.
+func GetPkgManager(system string) (PkgManager, error) {
+	var (
+		err error
+		p   platform.System
+	)
+
+	if p, err = platform.ParseSystem(system); err != nil {
+		return nil, err
+	}
+
+	switch p {
+	case platform.OpenSuse:
+		return CreatePkgZypp()
+	case platform.Debian:
+		return CreatePkgApt()
+	default:
+
+		return nil, fmt.Errorf("Support for %s is not implemented", p)
+	}
+} // func GetPkgManager(system string) (PkgManager, error)

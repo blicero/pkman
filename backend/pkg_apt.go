@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-20 12:40:37 krylon>
+// Time-stamp: <2023-05-20 21:51:10 krylon>
 
 package backend
 
@@ -12,6 +12,7 @@ import (
 	"log"
 	"os/exec"
 	"regexp"
+	"time"
 
 	"github.com/blicero/krylib"
 	"github.com/blicero/pkman/common"
@@ -52,7 +53,7 @@ func CreatePkgApt() (*PkgApt, error) {
 var patSearch = regexp.MustCompile(`^(\S+) - (.*)`) // nolint: unused
 
 func (pk *PkgApt) Search(query string) ([]Package, error) {
-	const cmdSearch = "/usr/bin/apt-cache"
+	const cmdSearch = cmdApt // "/usr/bin/apt-cache"
 	var (
 		err              error
 		cmd              *exec.Cmd
@@ -92,3 +93,31 @@ func (pk *PkgApt) Search(query string) ([]Package, error) {
 
 	return nil, krylib.ErrNotImplemented
 } // func (pk *PkgApt) Search(string) ([]Package, error)
+
+func (pk *PkgApt) Install(args ...string) error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgApt) Install(args ...string) error
+
+func (pk *PkgApt) Remove(args ...string) error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgApt) Remove(args ...string) error
+
+func (pk *PkgApt) Update() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgApt) Update() error
+
+func (pk *PkgApt) Upgrade() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgApt) Upgrade() error
+
+func (pk *PkgApt) ListInstalled() ([]Package, error) {
+	return nil, krylib.ErrNotImplemented
+} // func (pkg *PkgApt) ListInstalled() ([]Package, error)
+
+func (pk *PkgApt) Clean() error {
+	return krylib.ErrNotImplemented
+} // func (pk *PkgApt) Clean() error
+
+func (pkg *PkgApt) LastUpdate() (time.Time, error) {
+	return time.Unix(0, 0), krylib.ErrNotImplemented
+} // func (pkg *PkgApt) LastUpdate() (time.Time, error)
