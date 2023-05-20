@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-27 10:54:12 krylon>
+// Time-stamp: <2023-05-20 12:40:37 krylon>
 
 package backend
 
@@ -49,7 +49,7 @@ func CreatePkgApt() (*PkgApt, error) {
 	return pk, nil
 } // func CreatePkgApt() (*PkgApt, error)
 
-var patSearch = regexp.MustCompile(`^(\S+) - (.*)`)
+var patSearch = regexp.MustCompile(`^(\S+) - (.*)`) // nolint: unused
 
 func (pk *PkgApt) Search(query string) ([]Package, error) {
 	const cmdSearch = "/usr/bin/apt-cache"

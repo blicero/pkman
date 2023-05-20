@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 28. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-04-28 11:45:24 krylon>
+// Time-stamp: <2023-05-20 12:40:51 krylon>
 
 package backend
 
@@ -18,7 +18,7 @@ import (
 	"github.com/blicero/pkman/logdomain"
 )
 
-const cmdZypper = "/usr/bin/zypper"
+const cmdZypper = "/usr/bin/zypper" // nolint: unused
 
 // PkgZypp implements the PkgManager interface for openSuse's zypper.
 type PkgZypp struct {
