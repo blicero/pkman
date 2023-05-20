@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 04. 05. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-05 18:46:46 krylon>
+// Time-stamp: <2023-05-20 12:53:25 krylon>
 
 // Package cli implements the command line interface of pkman.
 package cli
@@ -45,3 +45,20 @@ func Open() (*CLI, error) {
 
 	return c, nil
 } // func Open() (*CLI, error)
+
+func (c *CLI) Run() {
+	var (
+		err           error
+		name, release string
+	)
+
+	if name, release, err = backend.DetectOS(); err != nil {
+		c.log.Printf("[ERROR] Cannot detect operating system: %s\n",
+			err.Error())
+		return
+	}
+
+	c.log.Printf("[DEBUG] We are running on %s %s\n",
+		name,
+		release)
+}
