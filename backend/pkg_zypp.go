@@ -2,14 +2,16 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 28. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-20 21:48:58 krylon>
+// Time-stamp: <2023-05-21 13:31:16 krylon>
 
 package backend
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"time"
 
@@ -83,7 +85,11 @@ func (pk *PkgZypp) Search(query string) ([]Package, error) {
 		}
 	}
 
-	return nil, krylib.ErrNotImplemented
+	fmt.Fprintf(os.Stdout,
+		"%s",
+		bufOut.String())
+
+	return nil, nil
 } // func (pk *PkgZypp) Search(query string) ([]Package, error)
 
 func (pk *PkgZypp) Install(args ...string) error {
