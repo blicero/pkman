@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 04. 05. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-20 21:46:12 krylon>
+// Time-stamp: <2023-05-22 14:32:00 krylon>
 
 // Package cli implements the command line interface of pkman.
 package cli
@@ -92,10 +92,19 @@ func (c *CLI) Run() {
 				args[0],
 				err.Error())
 		} else {
+			var namelen int
+
 			for _, p := range pkList {
-				fmt.Printf("%20s %10s %s\n",
+				if len(p.Name) > namelen {
+					namelen = len(p.Name)
+				}
+			}
+
+			var format = fmt.Sprintf("%%-%ds | %%s\n", namelen+2)
+
+			for _, p := range pkList {
+				fmt.Printf(format,
 					p.Name,
-					p.Version,
 					p.Description)
 			}
 		}
