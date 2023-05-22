@@ -2,17 +2,17 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 28. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-21 13:31:16 krylon>
+// Time-stamp: <2023-05-22 14:25:57 krylon>
 
 package backend
 
 import (
+	"bufio"
 	"bytes"
-	"fmt"
 	"io"
 	"log"
-	"os"
 	"os/exec"
+	"regexp"
 	"time"
 
 	"github.com/blicero/krylib"
@@ -47,6 +47,47 @@ func CreatePkgZypp() (*PkgZypp, error) {
 
 	return pk, nil
 } // func CreatePkgZypp() (*PkgZypp, error)
+
+/* Output of zypper search emacs:
+Repository 'X11:Utilities' ist veraltet. Sie können 'zypper refresh' als root ausführen, um es zu aktualisieren.
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+
+S  | Name                   | Summary                                                        | Type
+---+------------------------+----------------------------------------------------------------+------
+i+ | emacs                  | GNU Emacs Base Package                                         | Paket
+i+ | emacs-apel             | A Portable Emacs Library                                       | Paket
+i  | emacs-auctex           | AUC TeX: An Emacs Extension                                    | Paket
+   | emacs-color-theme      | Color themes for emacs                                         | Paket
+i  | emacs-el               | Several Lisp Files for GNU Emacs                               | Paket
+i  | emacs-eln              | GNU Emacs-nox: Emacs Lisp native compiled binary files         | Paket
+i+ | emacs-flim             | An Emacs Library for MIME                                      | Paket
+   | emacs-gnuplot-mode     | Gnuplot mode for EMACS                                         | Paket
+   | emacs-gnuplot-mode-doc | Documentation for EMACS Gnuplot mode                           | Paket
+i+ | emacs-info             | Info files for GNU Emacs                                       | Paket
+i+ | emacs-nox              | GNU Emacs-nox: An Emacs Binary without X Window System Support | Paket
+   | emacs-plugin-devhelp   | Devhelp plugin for Emacs                                       | Paket
+   | emacs-poke             | Emacs support for poke                                         | Paket
+   | emacs-scheme48         | CMUScheme48 emacs mode                                         | Paket
+   | emacs-semi             | Library to provide MIME feature for GNU Emacs                  | Paket
+   | emacs-vm               | VM - a mail reader for GNU Emacs                               | Paket
+i+ | emacs-w3m              | An interface program to use w3m with Emacs                     | Paket
+i+ | emacs-x11              | GNU Emacs: Emacs binary with X Window System Support           | Paket
+   | notmuch-emacs          | Emacs lisp email client based on notmuch                       | Paket
+   | pinentry-emacs         | Simple PIN or Passphrase Entry Dialog integrated into Emacs    | Paket
+   | qemacs                 | An editor similar to Emacs                                     | Paket
+   | supercollider-emacs    | SuperCollider support for Emacs                                | Paket
+   | vagrant-emacs          | Vagrantfile syntax files for the emacs editor                  | Paket
+   | xemacs                 | XEmacs                                                         | Paket
+   | xemacs-el              | Emacs-Lisp source files for XEmacs                             | Paket
+   | xemacs-info            | Info Files for XEmacs                                          | Paket
+   | xemacs-packages        | XEmacs Packages                                                | Paket
+   | xemacs-packages-el     | Emacs-Lisp source files for the XEmacs packages                | Paket
+   | xemacs-packages-info   | Info Files for the XEmacs Packages                             | Paket
+
+*/
+
+var patSe = regexp.MustCompile(`(?i)^(?:i\+?)?\s+\| (\S+)\s+\| (.*?)\s+\| \w+\s*$`)
 
 func (pk *PkgZypp) Search(query string) ([]Package, error) {
 	var (
@@ -85,11 +126,31 @@ func (pk *PkgZypp) Search(query string) ([]Package, error) {
 		}
 	}
 
-	fmt.Fprintf(os.Stdout,
-		"%s",
-		bufOut.String())
+	// if common.Debug {
+	// 	fmt.Fprintf(os.Stdout,
+	// 		"%s",
+	// 		bufOut.String())
+	// }
 
-	return nil, nil
+	var (
+		pkList = make([]Package, 0, 16)
+		rdr    = bufio.NewReader(&bufOut)
+		line   string
+	)
+
+	for line, err = rdr.ReadString('\n'); err == nil; line, err = rdr.ReadString('\n') {
+		var m = patSe.FindStringSubmatch(line)
+		if len(m) != 0 {
+			var p = Package{
+				Name:        m[1],
+				Description: m[2],
+			}
+
+			pkList = append(pkList, p)
+		}
+	}
+
+	return pkList, nil
 } // func (pk *PkgZypp) Search(query string) ([]Package, error)
 
 func (pk *PkgZypp) Install(args ...string) error {
