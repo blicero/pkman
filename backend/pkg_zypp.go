@@ -2,12 +2,11 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 28. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-22 14:25:57 krylon>
+// Time-stamp: <2023-05-24 14:40:18 krylon>
 
 package backend
 
 import (
-	"bufio"
 	"bytes"
 	"io"
 	"log"
@@ -87,7 +86,7 @@ i+ | emacs-x11              | GNU Emacs: Emacs binary with X Window System Suppo
 
 */
 
-var patSe = regexp.MustCompile(`(?i)^(?:i\+?)?\s+\| (\S+)\s+\| (.*?)\s+\| \w+\s*$`)
+var patSearchZypp = regexp.MustCompile(`(?mi)^(?:i\+?)?\s+\| (\S+)\s+\| (.*?)\s+\| \w+\s*$`)
 
 func (pk *PkgZypp) Search(query string) ([]Package, error) {
 	var (
@@ -126,27 +125,15 @@ func (pk *PkgZypp) Search(query string) ([]Package, error) {
 		}
 	}
 
-	// if common.Debug {
-	// 	fmt.Fprintf(os.Stdout,
-	// 		"%s",
-	// 		bufOut.String())
-	// }
-
 	var (
-		pkList = make([]Package, 0, 16)
-		rdr    = bufio.NewReader(&bufOut)
-		line   string
+		matches = patSearchZypp.FindAllStringSubmatch(bufOut.String(), -1)
+		pkList  = make([]Package, len(matches))
 	)
 
-	for line, err = rdr.ReadString('\n'); err == nil; line, err = rdr.ReadString('\n') {
-		var m = patSe.FindStringSubmatch(line)
-		if len(m) != 0 {
-			var p = Package{
-				Name:        m[1],
-				Description: m[2],
-			}
-
-			pkList = append(pkList, p)
+	for i, m := range matches {
+		pkList[i] = Package{
+			Name:        m[1],
+			Description: m[2],
 		}
 	}
 
