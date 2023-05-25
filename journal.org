@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-05-24 16:27:13 krylon>
+# Time-stamp: <2023-05-25 16:48:30 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,20 +11,21 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-05-24 Mi 16:27]
+   #+CAPTION: Clock summary at [2023-05-25 Do 16:48]
    | Headline                                | Time      |         |         |       |
    |-----------------------------------------+-----------+---------+---------+-------|
-   | *Total time*                            | *2d 1:16* |         |         |       |
+   | *Total time*                            | *2d 3:10* |         |         |       |
    |-----------------------------------------+-----------+---------+---------+-------|
-   | pkman                                   | 2d 1:16   |         |         |       |
-   | \_  Components [0/0]                    |           | 2d 1:16 |         |       |
+   | pkman                                   | 2d 3:10   |         |         |       |
+   | \_  Components [0/0]                    |           | 2d 3:10 |         |       |
    | \_    Database [0/0]                    |           |         |   11:05 |       |
    | \_    CLI [0/0]                         |           |         |   10:23 |       |
    | \_      [2023-05-20 Sa 12:17] Babysteps |           |         |         |  0:28 |
-   | \_    Package managers [2/2]            |           |         | 1d 3:48 |       |
+   | \_    Package managers [2/2]            |           |         | 1d 5:42 |       |
    | \_      Detect operating system         |           |         |         | 14:38 |
    | \_      Interface                       |           |         |         |  1:43 |
    | \_      apt                             |           |         |         |  5:39 |
+   | \_      dnf                             |           |         |         |  1:54 |
    | \_      zypper                          |           |         |         |  5:48 |
    #+END:
 ** Diary
@@ -132,6 +133,9 @@
      CLOCK: [2023-04-26 Mi 16:41]--[2023-04-26 Mi 20:35] =>  3:54
      :END:
 **** dnf
+     :LOGBOOK:
+     CLOCK: [2023-05-25 Do 14:54]--[2023-05-25 Do 16:48] =>  1:54
+     :END:
 **** zypper
      :LOGBOOK:
      CLOCK: [2023-05-22 Mo 13:37]--[2023-05-22 Mo 14:26] =>  0:49
