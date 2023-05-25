@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-20 21:50:41 krylon>
+// Time-stamp: <2023-05-25 16:38:24 krylon>
 
 package backend
 
@@ -41,6 +41,8 @@ func GetPkgManager(system string) (PkgManager, error) {
 		return CreatePkgZypp()
 	case platform.Debian:
 		return CreatePkgApt()
+	case platform.RedHat:
+		return CreatePkgDnf()
 	default:
 
 		return nil, fmt.Errorf("Support for %s is not implemented", p)
