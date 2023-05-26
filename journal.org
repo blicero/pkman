@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2023-05-26 16:46:07 krylon>
+# Time-stamp: <2023-05-26 18:44:50 krylon>
 #
 #+TAGS: optimize(o) refactor(r) bug(b) feature(f) architecture(a)
 #+TAGS: web(w) database(d) javascript(j)
@@ -11,23 +11,24 @@
 * pkman
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 20
-   #+CAPTION: Clock summary at [2023-05-26 Fr 16:46]
+   #+CAPTION: Clock summary at [2023-05-26 Fr 18:44]
    | Headline                                | Time      |         |         |       |
    |-----------------------------------------+-----------+---------+---------+-------|
-   | *Total time*                            | *2d 4:11* |         |         |       |
+   | *Total time*                            | *2d 4:42* |         |         |       |
    |-----------------------------------------+-----------+---------+---------+-------|
-   | pkman                                   | 2d 4:11   |         |         |       |
-   | \_  Components [0/0]                    |           | 2d 4:11 |         |       |
+   | pkman                                   | 2d 4:42   |         |         |       |
+   | \_  Components [0/0]                    |           | 2d 4:42 |         |       |
    | \_    Database [0/0]                    |           |         |   11:05 |       |
    | \_    CLI [0/0]                         |           |         |   10:23 |       |
    | \_      [2023-05-20 Sa 12:17] Babysteps |           |         |         |  0:28 |
-   | \_    Package managers [2/2]            |           |         | 1d 6:43 |       |
+   | \_    Package managers [2/2]            |           |         | 1d 7:14 |       |
    | \_      Detect operating system         |           |         |         | 14:38 |
    | \_      Interface                       |           |         |         |  1:43 |
    | \_      apt                             |           |         |         |  5:39 |
    | \_      dnf                             |           |         |         |  1:54 |
    | \_      zypper                          |           |         |         |  5:48 |
    | \_      pacman                          |           |         |         |  1:01 |
+   | \_      pkg FreeBSD                     |           |         |         |  0:31 |
    #+END:
 ** Diary
 ** Components [0/0]
@@ -152,5 +153,8 @@
      CLOCK: [2023-05-25 Do 19:14]--[2023-05-25 Do 19:40] =>  0:26
      :END:
 **** pkg FreeBSD
+     :LOGBOOK:
+     CLOCK: [2023-05-26 Fr 18:13]--[2023-05-26 Fr 18:44] =>  0:31
+     :END:
 **** pkg_* OpenBSD
 ** Bugs
