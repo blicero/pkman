@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 25. 05. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-26 16:15:45 krylon>
+// Time-stamp: <2023-05-26 18:26:42 krylon>
 
 package backend
 
@@ -133,7 +133,8 @@ func (pk *PkgPacman) Search(query string) ([]Package, error) {
 	for i, m := range matches {
 		pkList[i] = Package{
 			Name:        m[1],
-			Description: m[2],
+			Version:     m[2],
+			Description: m[3],
 		}
 	}
 
