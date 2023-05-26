@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 25. 05. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-25 19:39:53 krylon>
+// Time-stamp: <2023-05-26 16:15:45 krylon>
 
 package backend
 
@@ -82,7 +82,7 @@ community/wanderlust 20221010-1
     Mail/News reader supporting IMAP4rev1 for emacs.
 */
 
-var patSearchPacman = regexp.MustCompile(`(?im)^(\S+)\s+:\s+([^\n]+)$`)
+var patSearchPacman = regexp.MustCompile(`(?im)^[^/]+/(\S+) ([^\n]+)\s*\n\s+([^\n]+)$`)
 
 func (pk *PkgPacman) Search(query string) ([]Package, error) {
 	var (
@@ -92,7 +92,7 @@ func (pk *PkgPacman) Search(query string) ([]Package, error) {
 		bufOut, bufErr   bytes.Buffer
 	)
 
-	cmd = exec.Command(cmdPacman, "search", query)
+	cmd = exec.Command(cmdPacman, "-Ss", query)
 
 	if pipeOut, err = cmd.StdoutPipe(); err != nil {
 		pk.log.Printf("[ERROR] Cannot get stdout pipe from Cmd: %s\n",
