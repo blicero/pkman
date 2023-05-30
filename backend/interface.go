@@ -2,7 +2,7 @@
 // -*- mode: go; coding: utf-8; -*-
 // Created on 21. 04. 2023 by Benjamin Walkenhorst
 // (c) 2023 Benjamin Walkenhorst
-// Time-stamp: <2023-05-26 18:15:16 krylon>
+// Time-stamp: <2023-05-30 16:10:41 krylon>
 
 package backend
 
@@ -47,6 +47,8 @@ func GetPkgManager(system string) (PkgManager, error) {
 		return CreatePkgPacman()
 	case platform.FreeBSD:
 		return CreatePkgPkg()
+	case platform.OpenBSD:
+		return CreatePkgOpenBSD()
 	default:
 
 		return nil, fmt.Errorf("Support for %s is not implemented", p)
